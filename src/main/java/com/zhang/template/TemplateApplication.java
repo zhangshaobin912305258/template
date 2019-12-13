@@ -14,17 +14,18 @@ public class TemplateApplication {
 
 	private static String port;
 
-	public static String getPort() {
-		return port;
-	}
-
 	@Value("${server.port}")
-	public static void setPort(String port) {
+	public void setPort(String port) {
 		TemplateApplication.port = port;
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(TemplateApplication.class, args);
+		printServer();
+	}
+
+	public static void printServer() {
+		System.out.println("服务启动成功,访问地址: http://localhost:"+port);
 	}
 
 	/**
