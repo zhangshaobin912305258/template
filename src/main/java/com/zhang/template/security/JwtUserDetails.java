@@ -1,26 +1,31 @@
-package com.zhang.template.vo;
+package com.zhang.template.security;
+import java.util.Collection;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+/**
+ * 安全用户模型
+ * @author Louis
+ * @date Jan 14, 2019
+ */
 public class JwtUserDetails implements UserDetails {
-    private static final long serialVersionUID = 1L;
 
-    private String username;
+	private static final long serialVersionUID = 1L;
+	
+	private String username;
     private String password;
     private String salt;
     private Collection<? extends GrantedAuthority> authorities;
+
+    public JwtUserDetails(String username, String password, String salt, Collection<? extends GrantedAuthority> authorities) {
+        this.username = username;
+        this.password = password;
+        this.salt = salt;
+        this.authorities = authorities;
+    }
 
     @Override
     public String getUsername() {
@@ -34,9 +39,9 @@ public class JwtUserDetails implements UserDetails {
     }
 
     public String getSalt() {
-        return salt;
-    }
-
+		return salt;
+	}
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

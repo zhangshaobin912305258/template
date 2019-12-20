@@ -2,15 +2,14 @@ package com.zhang.template.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zhang.template.config.GrantedAuthorityImpl;
-import com.zhang.template.config.JwtAuthenticationToken;
 import com.zhang.template.entity.SysMenu;
 import com.zhang.template.entity.SysUser;
 import com.zhang.template.mapper.SysUserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhang.template.security.GrantedAuthorityImpl;
+import com.zhang.template.security.JwtAuthenticationToken;
+import com.zhang.template.security.JwtUserDetails;
 import com.zhang.template.util.PasswordUtils;
 import com.zhang.template.util.SecurityUtils;
 import com.zhang.template.vo.*;
@@ -25,7 +24,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,7 +39,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements UserDetailsService {
     @Autowired
-    private  SysUserMapper sysUserMapper;
+    private SysUserMapper sysUserMapper;
     @Autowired
     private MenuServiceImpl menuService;
     @Autowired
@@ -95,12 +93,7 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
                 .distinct()
                 .map(GrantedAuthorityImpl::new)
                 .collect(Collectors.toList());
-        return JwtUserDetails.builder()
-                .username(userDb.getName())
-                .password(userDb.getPassword())
-                .salt(userDb.getSalt())
-                .authorities(grantedAuthorities)
-                .build();
+        return  new JwtUserDetails(userDb.getName(),userDb.getPassword(), userDb.getSalt(), grantedAuthorities);
     }
 
     /**
