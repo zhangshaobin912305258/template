@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
- * 身份验证组件
+ * 身份验证组件提供者
  */
 public class JwtAuthenticationProvider extends DaoAuthenticationProvider {
      

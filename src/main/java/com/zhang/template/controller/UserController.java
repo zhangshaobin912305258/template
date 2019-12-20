@@ -1,6 +1,6 @@
 package com.zhang.template.controller;
 
-import com.zhang.template.service.SysUserServiceImpl;
+import com.zhang.template.service.UserServiceImpl;
 import com.zhang.template.vo.PageRequest;
 import com.zhang.template.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private SysUserServiceImpl sysUserService;
+    private UserServiceImpl sysUserService;
 
     @PostMapping("/findPage")
     public Result findPage(@RequestBody PageRequest pageRequest) {

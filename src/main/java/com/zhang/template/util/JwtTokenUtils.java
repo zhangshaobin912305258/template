@@ -4,6 +4,7 @@ import com.zhang.template.config.GrantedAuthorityImpl;
 import com.zhang.template.config.JwtAuthenticationToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +32,11 @@ public class JwtTokenUtils {
      * 权限列表
      */
     private static final String AUTHORITIES = "authorities";
+
+    /**
+     * 有效期12小时
+     */
+    private static final long EXPIRE_TIME = 12 * 60 * 60 * 1000;
 
     /**
      * 根据请求信息中的token获取登录认证信息
@@ -145,6 +151,13 @@ public class JwtTokenUtils {
         return generateToken(claims);
     }
 
+    /**
+     * 从数据声明中获取令牌
+     * @param claims
+     * @return
+     */
     private static String generateToken(Map<String, Object> claims) {
+        Date expirationDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+        return Jwts.builder().setClaims(claims).setExpiration(expirationDate).signWith(SignatureAlgorithm.HS512, SECRET).compact();
     }
 }

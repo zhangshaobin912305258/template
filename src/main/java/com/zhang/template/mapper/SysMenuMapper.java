@@ -2,6 +2,9 @@ package com.zhang.template.mapper;
 
 import com.zhang.template.entity.SysMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
+    List<SysMenu> selectByUsername(@Param(value = "username") String username);
 }

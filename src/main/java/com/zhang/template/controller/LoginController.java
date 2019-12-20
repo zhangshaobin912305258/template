@@ -2,7 +2,7 @@ package com.zhang.template.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
-import com.zhang.template.service.SysUserServiceImpl;
+import com.zhang.template.service.UserServiceImpl;
 import com.zhang.template.vo.LoginVo;
 import com.zhang.template.vo.Result;
 import com.zhang.template.vo.constEnum.ResultState;
@@ -27,7 +27,7 @@ public class LoginController {
     private Producer producer;
 
     @Autowired
-    private SysUserServiceImpl userService;
+    private UserServiceImpl userService;
 
     @GetMapping("captcha.jpg")
     public void captcha(HttpServletResponse response, HttpServletRequest request) throws IOException {

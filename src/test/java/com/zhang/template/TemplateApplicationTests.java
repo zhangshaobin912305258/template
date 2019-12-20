@@ -34,6 +34,9 @@ class TemplateApplicationTests {
 		globalConfig.setAuthor("zhang");
 		globalConfig.setOpen(false);
 		globalConfig.setActiveRecord(true);
+		globalConfig.setBaseResultMap(true);
+		globalConfig.setBaseColumnList(true);
+		//globalConfig.setFileOverride(true);
 
 		//数据源配置
 		DataSourceConfig dataSourceConfig = new DataSourceConfig();

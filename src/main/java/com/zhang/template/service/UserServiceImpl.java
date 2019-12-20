@@ -5,20 +5,23 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zhang.template.config.GrantedAuthorityImpl;
 import com.zhang.template.config.JwtAuthenticationToken;
+import com.zhang.template.entity.SysMenu;
 import com.zhang.template.entity.SysUser;
 import com.zhang.template.mapper.SysUserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhang.template.util.PasswordUtils;
 import com.zhang.template.util.SecurityUtils;
-import com.zhang.template.vo.LoginVo;
-import com.zhang.template.vo.PageRequest;
-import com.zhang.template.vo.PageResult;
-import com.zhang.template.vo.Result;
+import com.zhang.template.vo.*;
 import com.zhang.template.vo.constEnum.ResultState;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,13 +39,13 @@ import java.util.stream.Collectors;
  * @since 2019-12-18
  */
 @Service
-public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> {
-    private final SysUserMapper sysUserMapper;
+public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements UserDetailsService {
+    @Autowired
+    private  SysUserMapper sysUserMapper;
+    @Autowired
+    private MenuServiceImpl menuService;
     @Autowired
     private AuthenticationManager authenticationManager;
-    public SysUserServiceImpl(SysUserMapper sysUserMapper) {
-        this.sysUserMapper = sysUserMapper;
-    }
 
     public Result findPage(PageRequest pageRequest) {
         int page = pageRequest.getPage();
@@ -61,7 +64,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> {
 
     public Result login(LoginVo loginInfo, HttpServletRequest request) {
         String username = loginInfo.getUsername();
-        SysUser userDb = sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getName, username));
+        SysUser userDb = selectByName(username);
         if (userDb != null) {
             //校验密码信息
             if (!PasswordUtils.matches(userDb.getSalt(),loginInfo.getPassword(),userDb.getPassword())) {
@@ -76,4 +79,39 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> {
         }
         return Result.error(ResultState.INCORRECT_USER);
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        SysUser userDb = selectByName(username);
+        if (userDb == null) {
+            throw new UsernameNotFoundException("该用户不存在");
+        }
+        //查询用户具有的权限
+        List<SysMenu> sysMenus = menuService.selectByUsername(username);
+        List<GrantedAuthorityImpl> grantedAuthorities = sysMenus.stream()
+                .distinct()
+                .filter(sysMenu -> StringUtils.isNotEmpty(sysMenu.getPerms()))
+                .map(SysMenu::getPerms)
+                .distinct()
+                .map(GrantedAuthorityImpl::new)
+                .collect(Collectors.toList());
+        return JwtUserDetails.builder()
+                .username(userDb.getName())
+                .password(userDb.getPassword())
+                .salt(userDb.getSalt())
+                .authorities(grantedAuthorities)
+                .build();
+    }
+
+    /**
+     * 根据用户名查询用户
+     * @param username
+     * @return
+     */
+    public SysUser selectByName(String username) {
+        return sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getName, username));
+    }
+
+
+
 }
