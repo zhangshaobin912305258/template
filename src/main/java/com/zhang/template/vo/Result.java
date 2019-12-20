@@ -1,5 +1,6 @@
 package com.zhang.template.vo;
 
+import com.zhang.template.vo.constEnum.ResultState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +25,13 @@ public class Result {
     }
     public static Result ok(Object data) {
         return ok(null,data);
+    }
+
+    public static Result error(ResultState resultState) {
+        return Result.builder()
+                .code(resultState.getCode())
+                .message(resultState.getMessage())
+                .data(resultState.getData())
+                .build();
     }
 }

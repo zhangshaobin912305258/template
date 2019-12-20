@@ -2,9 +2,15 @@ package com.zhang.template.controller;
 
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
+import com.zhang.template.service.SysUserServiceImpl;
+import com.zhang.template.vo.LoginVo;
+import com.zhang.template.vo.Result;
+import com.zhang.template.vo.constEnum.ResultState;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
@@ -16,8 +22,12 @@ import java.io.IOException;
 
 @RestController
 public class LoginController {
+
     @Autowired
     private Producer producer;
+
+    @Autowired
+    private SysUserServiceImpl userService;
 
     @GetMapping("captcha.jpg")
     public void captcha(HttpServletResponse response, HttpServletRequest request) throws IOException {
@@ -33,5 +43,17 @@ public class LoginController {
         ImageIO.write(image, "jpg", out);
         IOUtils.closeQuietly(out);
     }
+
+    @PostMapping("/login")
+    public Result login(@RequestBody LoginVo loginInfo,HttpServletRequest request) {
+        String captcha = loginInfo.getCaptcha();
+        captcha = captcha.trim();
+        Object captchaCorrect = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if (captcha.equalsIgnoreCase((String)captchaCorrect)) {
+            return userService.login(loginInfo,request);
+        }
+        return Result.error(ResultState.INVALID_CAPTCHA);
+    }
+
 
 }
