@@ -14,14 +14,14 @@ public class PasswordEncoder {
 
 	private final static String MD5 = "MD5";
 	private final static String SHA = "SHA";
-	
+
 	private Object salt;
 	private String algorithm;
 
 	public PasswordEncoder(Object salt) {
 		this(salt, MD5);
 	}
-	
+
 	public PasswordEncoder(Object salt, String algorithm) {
 		this.salt = salt;
 		this.algorithm = algorithm;
@@ -70,7 +70,7 @@ public class PasswordEncoder {
 
 	/**
 	 * 转换字节数组为16进制字串
-	 * 
+	 *
 	 * @param b
 	 *            字节数组
 	 * @return 16进制字串

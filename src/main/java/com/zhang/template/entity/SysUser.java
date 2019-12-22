@@ -1,13 +1,19 @@
 package com.zhang.template.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * <p>
@@ -20,7 +26,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SysUser extends Model<SysUser> {
+public class SysUser extends Model<SysUser>  implements UserDetails {
 
     private static final long serialVersionUID=1L;
 
@@ -96,6 +102,12 @@ public class SysUser extends Model<SysUser> {
     private LocalDateTime lastUpdateTime;
 
     /**
+     * 权限列表
+     */
+    @TableField(exist=false)
+    private Collection<? extends GrantedAuthority> authorities;
+
+    /**
      * 是否删除  1：已删除  0：正常
      */
     private Integer delFlag;
@@ -106,4 +118,50 @@ public class SysUser extends Model<SysUser> {
         return this.id;
     }
 
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    /**
+     * 用户账号是否过期
+     */
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    /**
+     * 用户账号是否被锁定
+     */
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    /**
+     * 用户密码是否过期
+     */
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    /**
+     * 用户是否可用
+     */
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

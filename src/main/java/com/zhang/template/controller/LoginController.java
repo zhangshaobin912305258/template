@@ -6,6 +6,7 @@ import com.zhang.template.service.UserServiceImpl;
 import com.zhang.template.vo.LoginVo;
 import com.zhang.template.vo.Result;
 import com.zhang.template.vo.constEnum.ResultState;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotBlank;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -44,16 +46,21 @@ public class LoginController {
         IOUtils.closeQuietly(out);
     }
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login")
     public Result login(@RequestBody LoginVo loginInfo,HttpServletRequest request) {
         String captcha = loginInfo.getCaptcha();
-        captcha = captcha.trim();
-        Object captchaCorrect = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        if (captcha.equalsIgnoreCase((String)captchaCorrect)) {
-            return userService.login(loginInfo,request);
+        if (StringUtils.isEmpty(captcha)) {
+            return Result.error(ResultState.INVALID_CAPTCHA);
         }
-        return Result.error(ResultState.INVALID_CAPTCHA);
+        //校验验证码
+        Object sessionCaptcha = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+       if (sessionCaptcha == null) {
+           return Result.error(ResultState.INVALID_CAPTCHA);
+       }
+       if (!captcha.equalsIgnoreCase((String)sessionCaptcha)) {
+           return Result.error(ResultState.INVALID_CAPTCHA);
+       }
+       return userService.login(loginInfo,request);
     }
-
 
 }

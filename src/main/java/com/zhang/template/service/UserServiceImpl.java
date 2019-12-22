@@ -3,24 +3,20 @@ package com.zhang.template.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zhang.template.entity.SysMenu;
 import com.zhang.template.entity.SysUser;
 import com.zhang.template.mapper.SysUserMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zhang.template.security.GrantedAuthorityImpl;
-import com.zhang.template.security.JwtAuthenticationToken;
-import com.zhang.template.security.JwtUserDetails;
-import com.zhang.template.util.PasswordUtils;
-import com.zhang.template.util.SecurityUtils;
+import com.zhang.template.util.JwtTokenUtil;
 import com.zhang.template.vo.*;
 import com.zhang.template.vo.constEnum.ResultState;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,13 +33,16 @@ import java.util.stream.Collectors;
  * @since 2019-12-18
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements UserDetailsService {
+public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> {
     @Autowired
     private SysUserMapper sysUserMapper;
     @Autowired
-    private MenuServiceImpl menuService;
-    @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     public Result findPage(PageRequest pageRequest) {
         int page = pageRequest.getPage();
@@ -60,41 +59,6 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
         return Result.ok(PageResult.convert(userPage));
     }
 
-    public Result login(LoginVo loginInfo, HttpServletRequest request) {
-        String username = loginInfo.getUsername();
-        SysUser userDb = selectByName(username);
-        if (userDb != null) {
-            //校验密码信息
-            if (!PasswordUtils.matches(userDb.getSalt(),loginInfo.getPassword(),userDb.getPassword())) {
-                return Result.error(ResultState.INCORRECT_USER);
-            }
-            if (userDb.getStatus() == 1) {
-                return Result.error(ResultState.LOCK_USER);
-            }
-            //进行登录认证
-            JwtAuthenticationToken token = SecurityUtils.login(request,username,userDb.getPassword(),authenticationManager);
-            return Result.ok(token);
-        }
-        return Result.error(ResultState.INCORRECT_USER);
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUser userDb = selectByName(username);
-        if (userDb == null) {
-            throw new UsernameNotFoundException("该用户不存在");
-        }
-        //查询用户具有的权限
-        List<SysMenu> sysMenus = menuService.selectByUsername(username);
-        List<GrantedAuthorityImpl> grantedAuthorities = sysMenus.stream()
-                .distinct()
-                .filter(sysMenu -> StringUtils.isNotEmpty(sysMenu.getPerms()))
-                .map(SysMenu::getPerms)
-                .distinct()
-                .map(GrantedAuthorityImpl::new)
-                .collect(Collectors.toList());
-        return  new JwtUserDetails(userDb.getName(),userDb.getPassword(), userDb.getSalt(), grantedAuthorities);
-    }
 
     /**
      * 根据用户名查询用户
@@ -105,6 +69,26 @@ public class UserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impleme
         return sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getName, username));
     }
 
-
-
+    public Result login(LoginVo loginInfo, HttpServletRequest request) {
+        String username = loginInfo.getUsername();
+        SysUser userDb = selectByName(username);
+        if (userDb == null) {
+            return Result.error(ResultState.INCORRECT_USER);
+        }
+        String password = loginInfo.getPassword();
+        /*if (! PasswordUtils.matches(userDb.getSalt(),password,userDb.getPassword())) {
+            return Result.error(ResultState.INCORRECT_USER);
+        }*/
+        if (userDb.getStatus() == 1) {
+            return Result.error(ResultState.LOCK_USER);
+        }
+        //进行系统登录认证
+        //JwtAuthenticationToken token = SecurityUtils.login(request, username, password, authenticationManager);
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken( username, password );
+        Authentication authentication = authenticationManager.authenticate(upToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        String token = jwtTokenUtil.generateToken(userDetails);
+        return Result.ok(token);
+    }
 }

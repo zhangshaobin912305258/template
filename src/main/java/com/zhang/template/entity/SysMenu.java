@@ -8,6 +8,7 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * <p>
@@ -20,7 +21,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class SysMenu extends Model<SysMenu> {
+public class SysMenu extends Model<SysMenu>  {
 
     private static final long serialVersionUID=1L;
 
