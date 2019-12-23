@@ -6,14 +6,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
  * 角色机构 服务实现类
- * </p>
  *
  * @author zhang
  * @since 2019-12-18
  */
 @Service
-public class SysRoleDeptServiceImpl extends ServiceImpl<SysRoleDeptMapper, SysRoleDept>{
-
-}
+public class SysRoleDeptServiceImpl extends ServiceImpl<SysRoleDeptMapper, SysRoleDept> {}

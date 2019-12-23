@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("user")
 public class UserController {
 
-    @Autowired
-    private UserServiceImpl sysUserService;
+  @Autowired private UserServiceImpl sysUserService;
 
-    @PostMapping("/findPage")
-    public Result findPage(@RequestBody PageRequest pageRequest) {
-        return sysUserService.findPage(pageRequest);
-    }
-
+  @PostMapping("/findPage")
+  public Result findPage(@RequestBody PageRequest pageRequest) {
+    return sysUserService.findPage(pageRequest);
+  }
 }

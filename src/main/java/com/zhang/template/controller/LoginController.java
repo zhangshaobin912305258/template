@@ -18,49 +18,45 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotBlank;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 @RestController
 public class LoginController {
 
-    @Autowired
-    private Producer producer;
+  @Autowired private Producer producer;
 
-    @Autowired
-    private UserServiceImpl userService;
+  @Autowired private UserServiceImpl userService;
 
-    @GetMapping("captcha.jpg")
-    public void captcha(HttpServletResponse response, HttpServletRequest request) throws IOException {
-        response.setHeader("Cache-Control", "no-store, no-cache");
-        response.setContentType("image/jpeg");
-        // 生成文字验证码
-        String text = producer.createText();
-        // 生成图片验证码
-        BufferedImage image = producer.createImage(text);
-        // 保存到验证码到 session
-        request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
-        ServletOutputStream out = response.getOutputStream();
-        ImageIO.write(image, "jpg", out);
-        IOUtils.closeQuietly(out);
+  @GetMapping("captcha.jpg")
+  public void captcha(HttpServletResponse response, HttpServletRequest request) throws IOException {
+    response.setHeader("Cache-Control", "no-store, no-cache");
+    response.setContentType("image/jpeg");
+    // 生成文字验证码
+    String text = producer.createText();
+    // 生成图片验证码
+    BufferedImage image = producer.createImage(text);
+    // 保存到验证码到 session
+    request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
+    ServletOutputStream out = response.getOutputStream();
+    ImageIO.write(image, "jpg", out);
+    IOUtils.closeQuietly(out);
+  }
+
+  @PostMapping(value = "/login")
+  public Result login(@RequestBody LoginVo loginInfo, HttpServletRequest request) {
+    String captcha = loginInfo.getCaptcha();
+    if (StringUtils.isEmpty(captcha)) {
+      return Result.error(ResultState.INVALID_CAPTCHA);
     }
-
-    @PostMapping(value = "/login")
-    public Result login(@RequestBody LoginVo loginInfo,HttpServletRequest request) {
-        String captcha = loginInfo.getCaptcha();
-        if (StringUtils.isEmpty(captcha)) {
-            return Result.error(ResultState.INVALID_CAPTCHA);
-        }
-        //校验验证码
-        Object sessionCaptcha = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-       if (sessionCaptcha == null) {
-           return Result.error(ResultState.INVALID_CAPTCHA);
-       }
-       if (!captcha.equalsIgnoreCase((String)sessionCaptcha)) {
-           return Result.error(ResultState.INVALID_CAPTCHA);
-       }
-       return userService.login(loginInfo,request);
+    // 校验验证码
+    Object sessionCaptcha = request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+    if (sessionCaptcha == null) {
+      return Result.error(ResultState.INVALID_CAPTCHA);
     }
-
+    if (!captcha.equalsIgnoreCase((String) sessionCaptcha)) {
+      return Result.error(ResultState.INVALID_CAPTCHA);
+    }
+    return userService.login(loginInfo, request);
+  }
 }

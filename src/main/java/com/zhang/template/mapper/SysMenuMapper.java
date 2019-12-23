@@ -7,14 +7,12 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * <p>
  * 菜单管理 Mapper 接口
- * </p>
  *
  * @author zhang
  * @since 2019-12-18
  */
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
-    List<SysMenu> selectByUsername(@Param(value = "username") String username);
+  List<SysMenu> selectByUsername(@Param(value = "username") String username);
 }

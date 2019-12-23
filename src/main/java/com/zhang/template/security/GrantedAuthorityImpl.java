@@ -10,12 +10,12 @@ import org.springframework.security.core.GrantedAuthority;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GrantedAuthorityImpl  implements GrantedAuthority {
+public class GrantedAuthorityImpl implements GrantedAuthority {
 
-    private String authority;
+  private String authority;
 
-    @Override
-    public String getAuthority() {
-        return authority;
-    }
+  @Override
+  public String getAuthority() {
+    return authority;
+  }
 }

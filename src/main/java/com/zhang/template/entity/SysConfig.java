@@ -11,9 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <p>
  * 系统配置表
- * </p>
  *
  * @author zhang
  * @since 2019-12-18
@@ -23,73 +21,47 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class SysConfig extends Model<SysConfig> {
 
-    private static final long serialVersionUID=1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 编号
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+  /** 编号 */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Long id;
 
-    /**
-     * 数据值
-     */
-    private String value;
+  /** 数据值 */
+  private String value;
 
-    /**
-     * 标签名
-     */
-    private String label;
+  /** 标签名 */
+  private String label;
 
-    /**
-     * 类型
-     */
-    private String type;
+  /** 类型 */
+  private String type;
 
-    /**
-     * 描述
-     */
-    private String description;
+  /** 描述 */
+  private String description;
 
-    /**
-     * 排序（升序）
-     */
-    private BigDecimal sort;
+  /** 排序（升序） */
+  private BigDecimal sort;
 
-    /**
-     * 创建人
-     */
-    private String createBy;
+  /** 创建人 */
+  private String createBy;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
+  /** 创建时间 */
+  private LocalDateTime createTime;
 
-    /**
-     * 更新人
-     */
-    private String lastUpdateBy;
+  /** 更新人 */
+  private String lastUpdateBy;
 
-    /**
-     * 更新时间
-     */
-    private LocalDateTime lastUpdateTime;
+  /** 更新时间 */
+  private LocalDateTime lastUpdateTime;
 
-    /**
-     * 备注信息
-     */
-    private String remarks;
+  /** 备注信息 */
+  private String remarks;
 
-    /**
-     * 是否删除  1：已删除  0：正常
-     */
-    private Integer delFlag;
+  /** 是否删除 1：已删除 0：正常 */
+  private Integer delFlag;
 
-
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
-
+  @Override
+  protected Serializable pkVal() {
+    return this.id;
+  }
 }

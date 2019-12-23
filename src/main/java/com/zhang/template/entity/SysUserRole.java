@@ -10,9 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * <p>
  * 用户角色
- * </p>
  *
  * @author zhang
  * @since 2019-12-18
@@ -22,48 +20,32 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class SysUserRole extends Model<SysUserRole> {
 
-    private static final long serialVersionUID=1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * 编号
-     */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+  /** 编号 */
+  @TableId(value = "id", type = IdType.AUTO)
+  private Long id;
 
-    /**
-     * 用户ID
-     */
-    private Long userId;
+  /** 用户ID */
+  private Long userId;
 
-    /**
-     * 角色ID
-     */
-    private Long roleId;
+  /** 角色ID */
+  private Long roleId;
 
-    /**
-     * 创建人
-     */
-    private String createBy;
+  /** 创建人 */
+  private String createBy;
 
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
+  /** 创建时间 */
+  private LocalDateTime createTime;
 
-    /**
-     * 更新人
-     */
-    private String lastUpdateBy;
+  /** 更新人 */
+  private String lastUpdateBy;
 
-    /**
-     * 更新时间
-     */
-    private LocalDateTime lastUpdateTime;
+  /** 更新时间 */
+  private LocalDateTime lastUpdateTime;
 
-
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
-
+  @Override
+  protected Serializable pkVal() {
+    return this.id;
+  }
 }
