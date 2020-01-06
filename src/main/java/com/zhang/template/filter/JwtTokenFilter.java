@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -30,6 +32,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
+    //ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
+    //ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
     String token = request.getHeader(HEADER_STRING);
     if (null != token) {
       String username = jwtTokenUtil.getUsernameFromToken(token);
@@ -45,5 +49,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       }
     }
     chain.doFilter(request, response);
+
   }
 }
