@@ -1,6 +1,8 @@
 package com.zhang.template.util;
 
-import java.security.MessageDigest;
+import com.zhang.template.entity.User;
+import org.apache.commons.codec.digest.DigestUtils;
+import java.util.Random;
 
 /**
  * 密码加密
@@ -10,109 +12,52 @@ import java.security.MessageDigest;
  */
 public class PasswordEncoder {
 
-  private static final String[] hexDigits = {
-    "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"
-  };
+  private static final int saltLen = 15;//盐长度
 
-  private static final String MD5 = "MD5";
-  private static final String SHA = "SHA";
-
-  private Object salt;
-  private String algorithm;
-
-  public PasswordEncoder(Object salt) {
-    this(salt, MD5);
-  }
-
-  public PasswordEncoder(Object salt, String algorithm) {
-    this.salt = salt;
-    this.algorithm = algorithm;
-  }
-
-  /**
-   * 密码加密
-   *
-   * @param rawPass
-   * @return
+  /*
+   * 对password进行MD5加盐加密，返回加密过的password,并存储盐salt
    */
-  public String encode(String rawPass) {
-    String result = null;
+  public static User encrypt(User user){
+    Random random = new Random();
+    String str = "qwertyuiopasdfghjklzxcvbnm1234567890";
+    String salt = "";
+    for(int i=0;i<saltLen;i++){
+      salt += String.valueOf(str.charAt(random.nextInt(str.length())));//从str中随机获取字符生成长度为saltLen的加密盐
+    }
+    String passwordSalt = user.getPassword() + salt;//将密码和盐拼接到一起
+    System.out.println(passwordSalt);
     try {
-      MessageDigest md = MessageDigest.getInstance(algorithm);
-      // 加密后的字符串
-      result = byteArrayToHexString(md.digest(mergePasswordAndSalt(rawPass).getBytes("utf-8")));
-    } catch (Exception ex) {
+      String md5 = DigestUtils.md5Hex(passwordSalt);
+      user.setPassword(md5);
+      user.setSalt(salt);
+      return user;
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    return result;
+    return null;
   }
 
-  /**
-   * 密码匹配验证
-   *
-   * @param encPass 密文
-   * @param rawPass 明文
-   * @return
-   */
-  public boolean matches(String encPass, String rawPass) {
-    String pass1 = "" + encPass;
-    String pass2 = encode(rawPass);
-
-    return pass1.equals(pass2);
-  }
-
-  private String mergePasswordAndSalt(String password) {
-    if (password == null) {
-      password = "";
+  public static boolean matches(String password,User user) {
+    String passwordSalt = password + user.getSalt();//将密码和盐拼接到一起
+    try {
+      String md5 = DigestUtils.md5Hex(passwordSalt);
+      return md5.equalsIgnoreCase(user.getPassword());
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+    return false;
+  }
 
-    if ((salt == null) || "".equals(salt)) {
-      return password;
-    } else {
-      return password + "{" + salt.toString() + "}";
+  public static boolean matches(String salt, String password, String presentedPassword) {
+    User user = User.builder().password(password).salt(salt).build();
+    return matches(presentedPassword,user);
+  }
+
+
+
+  	public static void main(String[] args) {
+      User encrypt = encrypt(User.builder().name("admin").password("admin").build());
+      System.out.println(encrypt);
     }
-  }
-
-  /**
-   * 转换字节数组为16进制字串
-   *
-   * @param b 字节数组
-   * @return 16进制字串
-   */
-  private String byteArrayToHexString(byte[] b) {
-    StringBuffer resultSb = new StringBuffer();
-    for (int i = 0; i < b.length; i++) {
-      resultSb.append(byteToHexString(b[i]));
-    }
-    return resultSb.toString();
-  }
-
-  /**
-   * 将字节转换为16进制
-   *
-   * @param b
-   * @return
-   */
-  private static String byteToHexString(byte b) {
-    int n = b;
-    if (n < 0) n = 256 + n;
-    int d1 = n / 16;
-    int d2 = n % 16;
-    return hexDigits[d1] + hexDigits[d2];
-  }
-
-  //	public static void main(String[] args) {
-  //		String salt = "helloworld";
-  //		PasswordEncoder encoderMd5 = new PasswordEncoder(salt, "MD5");
-  //		String encode = encoderMd5.encode("test");
-  //		System.out.println(encode);
-  //		boolean passwordValid = encoderMd5.validPassword("1bd98ed329aebc7b2f89424b5a38926e", "test");
-  //		System.out.println(passwordValid);
-  //
-  //		PasswordEncoder encoderSha = new PasswordEncoder(salt, "SHA");
-  //		String pass2 = encoderSha.encode("test");
-  //		System.out.println(pass2);
-  //		boolean passwordValid2 = encoderSha.validPassword("1bd98ed329aebc7b2f89424b5a38926e", "test");
-  //		System.out.println(passwordValid2);
-  //	}
 
 }

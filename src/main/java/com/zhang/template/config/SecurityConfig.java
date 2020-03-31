@@ -2,7 +2,6 @@ package com.zhang.template.config;
 
 import com.zhang.template.filter.JwtTokenFilter;
 import com.zhang.template.security.JwtAuthenticationProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,34 +14,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  @Autowired
-  private UserDetailsService userDetailsService;
+  private final UserDetailsService userDetailsService;
 
-  /*@Autowired
-  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
-      //校验用户
-      auth.userDetailsService( userDetailsService ).passwordEncoder( new PasswordEncoder() {
-          //对密码进行加密
-          @Override
-          public String encode(CharSequence charSequence) {
-              System.out.println(charSequence.toString());
-              return DigestUtils.md5DigestAsHex(charSequence.toString().getBytes());
-          }
-          //对密码进行判断匹配
-          @Override
-          public boolean matches(CharSequence charSequence, String s) {
-              String encode = DigestUtils.md5DigestAsHex(charSequence.toString().getBytes());
-              boolean res = s.equals( encode );
-              return res;
-          }
-      } );
-
-  }*/
+  public SecurityConfig(UserDetailsService userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
 
   @Override
   public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -52,7 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-
     http.csrf()
         .disable()
         // 因为使用JWT，所以不需要HttpSession
@@ -65,6 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll()
         // 登录接口放行
         .antMatchers("/login")
+        .permitAll()
+        //swagger地址
+        .antMatchers("/doc.html**")
         .permitAll()
         // 首页和登录页面
         .antMatchers("/")

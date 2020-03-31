@@ -22,11 +22,11 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
   @Override
   public void updateFill(MetaObject metaObject) {
-    boolean has = metaObject.hasGetter("createTime");
+    boolean has = metaObject.hasGetter("lastUpdateTime");
     if (has) {
-      Object createTime = getFieldValByName("createTime", metaObject);
-      if (createTime == null) {
-        strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+      Object updateTime = getFieldValByName("lastUpdateTime", metaObject);
+      if (updateTime == null) {
+        strictInsertFill(metaObject, "lastUpdateTime", LocalDateTime.class, LocalDateTime.now());
       }
     }
   }

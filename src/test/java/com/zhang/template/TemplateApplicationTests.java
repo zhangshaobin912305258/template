@@ -7,24 +7,33 @@ import com.baomidou.mybatisplus.generator.config.*;
 
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-class TemplateApplicationTests {
+@RunWith(SpringRunner.class)
+public class TemplateApplicationTests {
+
+
 
 	@Test
-	void contextLoads() {
+	public void test() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		Object userService = context.getBean("userService");
+		System.out.println(userService);
 	}
 
 	/**
 	 * 代码生成器
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		//代码生成器
 		AutoGenerator autoGenerator = new AutoGenerator();
 		//全局配置
@@ -88,6 +97,6 @@ class TemplateApplicationTests {
 		autoGenerator.setTemplate(templateConfig);
 		autoGenerator.setStrategy(strategy);
 		autoGenerator.execute();
-	}
+	}*/
 
 }

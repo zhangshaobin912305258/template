@@ -1,5 +1,6 @@
 package com.zhang.template.util;
 
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -21,20 +22,6 @@ public class DateUtil {
      */
     public static LocalDateTime convertByDate(Date date) {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
-    /**
-     * 计算传入的日期时间距离下个整小时零分零秒差距多少秒
-     * @param localDateTime
-     * @return
-     */
-    public static Long getNextHourZeroTimes(LocalDateTime localDateTime) {
-        LocalDateTime nextHourDateTime = localDateTime.plusHours(1);
-        //下一个小时的零分零秒  比如 2019-11-21 23:30:30  转换结果：2019-11-22 00:00:00
-        LocalDateTime nextHourZeroDateTime = LocalDateTime.of(nextHourDateTime.toLocalDate(), LocalTime.of(nextHourDateTime.getHour(), 0, 0));
-        //计算两个时间的时间戳 差
-        Duration duration = Duration.between(localDateTime, nextHourZeroDateTime);
-        return duration.getSeconds();
     }
 
     /**
@@ -105,7 +92,7 @@ public class DateUtil {
      */
     public static LocalDateTime convertToZeroLocalDateTime(LocalDateTime localDateTime) {
         if (localDateTime == null) {
-            return null;
+            localDateTime = LocalDateTime.now();
         }
         return LocalDateTime.of(localDateTime.toLocalDate(),LocalTime.of(0,0));
     }
@@ -132,29 +119,6 @@ public class DateUtil {
             return null;
         }
         return new SimpleDateFormat(DateUtil.FORMAT_PATTERN).format(date);
-    }
-
-    /**
-     * 获取停车时长 单位（秒）
-     * @return
-     */
-    public static Long getStopCarMins(Long exitTimestamp,Long entryTimestamp) {
-        return (exitTimestamp - entryTimestamp) / 1000 % 60 == 0 ? ((exitTimestamp - entryTimestamp) / 1000 / 60) : ((exitTimestamp - entryTimestamp) / 1000 / 60 + 1);
-    }
-
-    /**
-     * 获取停车时长 单位（秒）
-     * @param exitLocalDateTime
-     * @param entryLocalDateTime
-     * @return
-     */
-    public static Long getStopCarMins(LocalDateTime exitLocalDateTime,LocalDateTime entryLocalDateTime) {
-        if (exitLocalDateTime == null || entryLocalDateTime == null) {
-            return 0L;
-        }
-        Long exitTimestamp = DateUtil.convertToDate(exitLocalDateTime).getTime();
-        Long entryTimestamp = DateUtil.convertToDate(entryLocalDateTime).getTime();
-        return (exitTimestamp - entryTimestamp) / 1000 % 60 == 0 ? ((exitTimestamp - entryTimestamp) / 1000 / 60) : ((exitTimestamp - entryTimestamp) / 1000 / 60 + 1);
     }
 
     public static Long convertToTimestamp(LocalDateTime startDateTime) {

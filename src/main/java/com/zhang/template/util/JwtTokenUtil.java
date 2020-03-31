@@ -1,6 +1,6 @@
 package com.zhang.template.util;
 
-import com.zhang.template.entity.SysUser;
+import com.zhang.template.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -37,7 +37,7 @@ public class JwtTokenUtil implements Serializable {
 
   /** 验证JWT */
   public Boolean validateToken(String token, UserDetails userDetails) {
-    SysUser user = (SysUser) userDetails;
+    User user = (User) userDetails;
     String username = getUsernameFromToken(token);
 
     return (username.equals(user.getUsername()) && !isTokenExpired(token));
