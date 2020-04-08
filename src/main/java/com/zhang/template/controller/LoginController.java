@@ -63,4 +63,8 @@ public class LoginController {
         }
         return userService.login(loginInfo, request);
     }
+
+    public void test1() {
+
+    }
 }
