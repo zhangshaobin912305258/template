@@ -80,4 +80,9 @@ public class LoginController {
         System.out.println(111);
         System.out.println(222);
     }
+
+    public void test3() {
+        System.out.println(333);
+        System.out.println(444);
+    }
 }
