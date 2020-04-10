@@ -16,15 +16,16 @@ public class Result {
     private String message;
     private Object data;
 
-    public static Result ok(String message,Object data) {
+    public static Result ok(String message, Object data) {
         return Result.builder()
                 .code(200)
                 .message(message)
                 .data(data)
                 .build();
     }
+
     public static Result ok(Object data) {
-        return ok(null,data);
+        return ok(null, data);
     }
 
     public static Result error(ResultState resultState) {
@@ -32,6 +33,14 @@ public class Result {
                 .code(resultState.getCode())
                 .message(resultState.getMessage())
                 .data(resultState.getData())
+                .build();
+    }
+
+    public static Result ok(int code, String message, Object data) {
+        return Result.builder()
+                .code(code)
+                .message(message)
+                .data(data)
                 .build();
     }
 }
