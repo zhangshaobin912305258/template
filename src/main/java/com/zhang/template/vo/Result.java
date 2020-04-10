@@ -37,6 +37,8 @@ public class Result {
     }
 
     public static Result ok(int code, String message, Object data) {
+        System.out.println(111);
+        System.out.println(222);
         return Result.builder()
                 .code(code)
                 .message(message)
