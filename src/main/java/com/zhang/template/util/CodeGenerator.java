@@ -26,19 +26,19 @@ public class CodeGenerator {
         gc.setFileOverride(true);
         gc.setAuthor("zhang"); //生成文件的作者名称
         gc.setOpen(false);
-        gc.setSwagger2(true);
+        gc.setSwagger2(false);
         gc.setActiveRecord(true);
         gc.setEnableCache(false);// XML 二级缓存
         gc.setBaseResultMap(true);// XML ResultMap
         gc.setBaseColumnList(true);// XML columList
+        gc.setServiceName("%sService");
         mpg.setGlobalConfig(gc);
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/template?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true");
+        dsc.setUrl("jdbc:mysql://139.159.227.224:3306/template?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver"); //设置数据库驱动,因为我的数据库版本是mysql5.7,所以使用该驱动
-        // dsc.setDriverName("com.mysql.jdbc.Driver"); //mysql5.6以下的驱动
-        dsc.setUsername("zhang"); //数据库名称
-        dsc.setPassword("zhang"); //数据库密码
+        dsc.setUsername("root"); //数据库名称
+        dsc.setPassword("123456"); //数据库密码
         mpg.setDataSource(dsc);
         // 包配置
         PackageConfig pc = new PackageConfig();

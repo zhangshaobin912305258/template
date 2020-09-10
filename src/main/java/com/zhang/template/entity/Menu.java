@@ -5,24 +5,21 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ * 菜单表
  * </p>
  *
  * @author zhang
- * @since 2020-03-30
+ * @since 2020-09-10
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Menu对象", description="")
 public class Menu extends Model<Menu> {
 
     private static final long serialVersionUID = 1L;
@@ -30,41 +27,82 @@ public class Menu extends Model<Menu> {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    @ApiModelProperty(value = "菜单名称")
-    private String name;
+    /**
+     * 菜单名称
+     */
+    private String menuName;
 
-    @ApiModelProperty(value = "父菜单ID，一级菜单为0")
+    /**
+     * 父菜单ID
+     */
     private Integer parentId;
 
-    @ApiModelProperty(value = "菜单URL,类型：1.普通页面（如用户管理， /sys/user） 2.嵌套完整外部页面，以http(s)开头的链接 3.嵌套服务器页面，使用iframe:前缀+目标URL(如SQL监控， * iframe:/druid/login.html, iframe:前缀会替换成服务器地址)")
-    private String url;
-
-    @ApiModelProperty(value = "授权(多个用逗号分隔，如：sys:user:add,sys:user:edit)")
-    private String perms;
-
-    @ApiModelProperty(value = " 类型 0：目录 1：菜单 2：按钮")
-    private Long type;
-
-    @ApiModelProperty(value = "菜单图标")
-    private String icon;
-
-    @ApiModelProperty(value = "排序")
     private Integer orderNum;
 
-    @ApiModelProperty(value = "创建人")
+    /**
+     * 路由地址
+     */
+    private String path;
+
+    /**
+     * 组件路径
+     */
+    private String component;
+
+    /**
+     * 是否为外链（0是 1否）
+     */
+    private Integer isFrame;
+
+    /**
+     * 菜单类型（M目录 C菜单 F按钮）
+     */
+    private String menuType;
+
+    /**
+     * 菜单状态（0显示 1隐藏）
+     */
+    private Integer visible;
+
+    /**
+     * 菜单状态（0正常 1停用）
+     */
+    private Integer status;
+
+    /**
+     * 权限标识
+     */
+    private String perms;
+
+    /**
+     * 菜单图标
+     */
+    private String icon;
+
+    /**
+     * 创建者
+     */
     private String createBy;
 
-    @ApiModelProperty(value = "创建时间")
+    /**
+     * 创建时间
+     */
     private LocalDateTime createTime;
 
-    @ApiModelProperty(value = "更新人")
-    private String lastUpdateBy;
+    /**
+     * 更新者
+     */
+    private String updateBy;
 
-    @ApiModelProperty(value = "更新时间")
-    private LocalDateTime lastUpdateTime;
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
-    @ApiModelProperty(value = "是否删除 1：已删除 0：正常")
-    private Long delFlag;
+    /**
+     * 备注
+     */
+    private String remark;
 
 
     @Override

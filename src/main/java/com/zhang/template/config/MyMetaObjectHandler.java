@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+/**
+ * 统一处理创建时间和修改时间
+ */
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 

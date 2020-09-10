@@ -1,6 +1,6 @@
 package com.zhang.template.config;
 
-import com.zhang.template.util.JsonUtil;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,6 +22,7 @@ import java.net.URLDecoder;
 @Slf4j
 @Component
 public class AopConfig {
+
     @Pointcut("execution(* com.zhang.template.controller..*(..)))")
     private void logPointCut() {
     }
@@ -55,7 +56,7 @@ public class AopConfig {
                     }
                     if (arguments != null) {
                         try {
-                            params = JsonUtil.bean2Json(arguments);
+                            params = JSONUtil.toJsonStr(arguments);
                         } catch (Exception e) {
                             params = arguments.toString();
                         }
@@ -67,7 +68,7 @@ public class AopConfig {
                     params = URLDecoder.decode(params, "UTF-8");
                 }
             }
-            log.info("requestMethod:{},请求地址:{},请求参数:{},响应:{},请求耗时:{}ms.", method, uri, params, JsonUtil.bean2Json(result), (endTime - startTime));
+            log.info("requestMethod:{},请求地址:{},请求参数:{},响应:{},请求耗时:{}ms.", method, uri, params, JSONUtil.toJsonStr(result), (endTime - startTime));
         } catch (Exception e) {
             e.printStackTrace();
             log.error("log error !!", e);

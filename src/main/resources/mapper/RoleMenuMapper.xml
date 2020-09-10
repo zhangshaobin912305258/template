@@ -4,18 +4,13 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.zhang.template.entity.RoleMenu">
-        <id column="id" property="id" />
-        <result column="role_id" property="roleId" />
+        <id column="role_id" property="roleId" />
         <result column="menu_id" property="menuId" />
-        <result column="create_by" property="createBy" />
-        <result column="create_time" property="createTime" />
-        <result column="last_update_by" property="lastUpdateBy" />
-        <result column="last_update_time" property="lastUpdateTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, role_id, menu_id, create_by, create_time, last_update_by, last_update_time
+        role_id, menu_id
     </sql>
 
 </mapper>
