@@ -12,7 +12,6 @@ import com.zhang.template.vo.user.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -44,14 +43,14 @@ public class LoginServiceImpl implements LoginService {
         String verifyKey = CaptchaConstants.CAPTCHA_CODE_KEY + uuid;
         String captcha = redisCache.getCacheObject(verifyKey);
         redisCache.deleteObject(verifyKey);
-        if (captcha == null) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(/*username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire"))*/));
+        /*if (captcha == null) {
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(*//*username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire"))*//*));
             throw new BusinessException(ResultState.INVALID_CAPTCHA);
         }
         if (!code.equalsIgnoreCase(captcha)) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(/*username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")*/));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(*//*username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")*//*));
             throw new BusinessException(ResultState.INVALID_CAPTCHA);
-        }
+        }*/
         // 用户验证
         Authentication authentication = null;
         try {
@@ -59,13 +58,9 @@ public class LoginServiceImpl implements LoginService {
             authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (Exception e) {
-            if (e instanceof BadCredentialsException) {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(/*username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")*/));
-                throw new BusinessException(ResultState.INCORRECT_USER);
-            } else {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(/*username, Constants.LOGIN_FAIL, e.getMessage()*/));
-                throw new BusinessException(ResultState.INCORRECT_USER);
-            }
+            e.printStackTrace();
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(/*username, Constants.LOGIN_FAIL, e.getMessage()*/));
+            throw new BusinessException(ResultState.INCORRECT_USER);
         }
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(/*username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")*/));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();

@@ -1,5 +1,7 @@
 package com.zhang.template.controller;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.map.MapUtil;
 import com.google.code.kaptcha.Producer;
 import com.zhang.template.constants.CaptchaConstants;
 import com.zhang.template.constants.ResultState;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +39,7 @@ public class CaptchaController {
      * 生成验证码
      */
     @GetMapping("/captchaImage")
-    public Result getCode(HttpServletResponse response) throws IOException {
+    public Result getCode() {
         // 保存验证码信息
         String uuid = IdUtils.simpleUUID();
         String verifyKey = CaptchaConstants.CAPTCHA_CODE_KEY + uuid;
@@ -54,7 +55,6 @@ public class CaptchaController {
             capStr = code = captchaProducer.createText();
             image = captchaProducer.createImage(capStr);
         }
-
         redisCache.setCacheObject(verifyKey, code, CaptchaConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
@@ -63,7 +63,10 @@ public class CaptchaController {
         } catch (IOException e) {
             return Result.error(ResultState.IMAGE_ERROR);
         }
-        return Result.ok();
+        return Result.ok(MapUtil.builder()
+                .put("uuid", uuid)
+                .put("img", Base64.encode(os.toByteArray()))
+                .build());
        /* AjaxResult ajax = AjaxResult.success();
         ajax.put("uuid", uuid);
         ajax.put("img", Base64.encode(os.toByteArray()));

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisCache {
 
-    public RedisTemplate redisTemplate;
+    public final RedisTemplate redisTemplate;
 
     /**
      * 缓存基本的对象，Integer、String、实体类等

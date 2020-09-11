@@ -2,6 +2,9 @@ package com.zhang.template.mapper;
 
 import com.zhang.template.entity.Menu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Set;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface MenuMapper extends BaseMapper<Menu> {
 
+    Set<String> selectMenuPermsByUserId(@Param("id") Integer id);
 }

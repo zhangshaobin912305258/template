@@ -68,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login")
                 .permitAll()
                 // 验证码
-                .antMatchers("/captcha.jpg**")
+                .antMatchers("/captchaImage")
                 .permitAll()
                 // 服务监控
                 .antMatchers("/actuator/**")

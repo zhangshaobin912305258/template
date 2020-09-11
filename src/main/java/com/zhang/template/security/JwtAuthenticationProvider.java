@@ -1,7 +1,11 @@
 package com.zhang.template.security;
 
+import cn.hutool.json.JSONUtil;
+import com.zhang.template.constants.ResultState;
 import com.zhang.template.entity.User;
+import com.zhang.template.exception.BusinessException;
 import com.zhang.template.util.PasswordEncoder;
+import com.zhang.template.vo.user.LoginUser;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -30,13 +34,12 @@ public class JwtAuthenticationProvider extends DaoAuthenticationProvider {
     }
 
     String presentedPassword = authentication.getCredentials().toString();
-    String salt = ((User) userDetails).getSalt();
+    User user = ((LoginUser) userDetails).getUser();
+    String salt = user.getSalt();
     // 覆写密码验证逻辑
     if (! PasswordEncoder.matches(salt,userDetails.getPassword(),presentedPassword)) {
-      logger.debug("Authentication failed: password does not match stored value");
-      throw new BadCredentialsException(
-              messages.getMessage(
-                      "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+      logger.info(String.format("密码校验失败,用户信息:s%", JSONUtil.toJsonStr(user)));
+      throw new BusinessException(ResultState.INCORRECT_USER);
     }
    /* if (!new PasswordEncoder(salt).matches(userDetails.getPassword(), presentedPassword)) {
       logger.debug("Authentication failed: password does not match stored value");

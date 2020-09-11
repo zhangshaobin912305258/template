@@ -1,12 +1,13 @@
 package com.zhang.template.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhang.template.entity.Menu;
 import com.zhang.template.entity.User;
 import com.zhang.template.mapper.MenuMapper;
 import com.zhang.template.service.MenuService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -22,6 +23,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public Set<String> getMenuPermission(User user) {
-        return null;
+        Set<String> perms = new HashSet<String>();
+        // 管理员拥有所有权限
+        if ("admin".equals(user.getUsername())) {
+            perms.add("*:*:*");
+        } else {
+            perms.addAll(baseMapper.selectMenuPermsByUserId(user.getId()));
+        }
+        return perms;
     }
 }

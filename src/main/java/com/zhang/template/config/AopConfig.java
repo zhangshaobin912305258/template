@@ -71,7 +71,7 @@ public class AopConfig {
             log.info("requestMethod:{},请求地址:{},请求参数:{},响应:{},请求耗时:{}ms.", method, uri, params, JSONUtil.toJsonStr(result), (endTime - startTime));
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("log error !!", e);
+            log.error("requestMethod:{},请求地址:{},请求参数:{},响应:{},请求耗时:{}ms.", method, uri, params, JSONUtil.toJsonStr(result), (endTime - startTime));
         }
         return result;
     }
