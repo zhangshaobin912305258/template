@@ -86,11 +86,11 @@
 			<version>2.3.28</version>
 		</dependency>
 		<!-- kaptcha -->
-		<dependency>
+		<!--<dependency>
 			<groupId>com.github.axet</groupId>
 			<artifactId>kaptcha</artifactId>
 			<version>0.0.9</version>
-		</dependency>
+		</dependency>-->
 		<!-- spring security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
