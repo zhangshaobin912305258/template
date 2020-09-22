@@ -17,5 +17,6 @@ public class RouteInfoVo implements Serializable {
     private String icon;
     private boolean jump;
     private boolean directory;
+    private RouteInfoVo parent;
     private List<RouteInfoVo> children;
 }

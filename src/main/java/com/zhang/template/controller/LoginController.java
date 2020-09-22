@@ -7,6 +7,7 @@ import com.zhang.template.vo.Result;
 import com.zhang.template.vo.login.LoginRequest;
 import com.zhang.template.vo.route.RouteInfoVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,9 +55,8 @@ public class LoginController {
         routeInfo1.setDirectory(true);
         routeInfo1.setIcon("");
         routeInfo1.setJump(false);
-
+        routeInfo1.setParent(null);
         List<RouteInfoVo> userChildren = new ArrayList<>();
-
         RouteInfoVo userRoute = new RouteInfoVo();
         userRoute.setChildren(Collections.emptyList());
         userRoute.setLabel("用户列表");
@@ -64,7 +64,9 @@ public class LoginController {
         userRoute.setPath("user/List");
         userRoute.setDirectory(false);
         userRoute.setJump(true);
-
+        RouteInfoVo copy = new RouteInfoVo();
+        BeanUtils.copyProperties(routeInfo1, copy);
+        userRoute.setParent(copy);
         userChildren.add(userRoute);
         routeInfo1.setChildren(userChildren);
         result.add(routeInfo1);
