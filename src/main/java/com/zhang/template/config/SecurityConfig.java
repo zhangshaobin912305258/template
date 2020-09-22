@@ -59,6 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 登录接口放行
                 .antMatchers("/login")
                 .permitAll()
+                .antMatchers("/getRoutes")
+                .permitAll()
                 //swagger地址
                 .antMatchers("/doc.html**")
                 .permitAll()
