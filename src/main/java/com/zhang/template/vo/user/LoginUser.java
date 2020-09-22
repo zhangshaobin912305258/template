@@ -2,7 +2,9 @@ package com.zhang.template.vo.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zhang.template.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +13,8 @@ import java.util.Collection;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginUser implements Serializable, UserDetails {
     private String username;
     private String token;
@@ -26,6 +30,8 @@ public class LoginUser implements Serializable, UserDetails {
      * 权限列表
      */
     private Set<String> permissions;
+
+
 
     public LoginUser(User user, Set<String> permissions) {
         this.user = user;

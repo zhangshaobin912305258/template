@@ -7,18 +7,20 @@ import com.zhang.template.vo.Result;
 import com.zhang.template.vo.login.LoginRequest;
 import com.zhang.template.vo.route.RouteInfoVo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class LoginController {
     private final LoginService loginService;
 
@@ -43,6 +45,12 @@ public class LoginController {
         return Result.ok(MapUtil.builder()
                 .put("routes", buildRouteInfos())
                 .build());
+    }
+
+    @RequestMapping("/testToken")
+    public Result testToken(HttpServletRequest request) {
+        log.info(request.getHeader("Authorization"));
+        return Result.ok();
     }
 
     public List<RouteInfoVo> buildRouteInfos() {
@@ -71,6 +79,15 @@ public class LoginController {
         routeInfo1.setChildren(userChildren);
         result.add(routeInfo1);
         return result;
+    }
+
+    public static void main(String[] args) {
+        List<String> strings1 = Arrays.asList("2", "3");
+        List<String> strings2 = Arrays.asList("1", "2", "3", "4");
+        String collect = strings2.stream()
+                .filter(s -> !strings1.contains(s))
+                .collect(Collectors.joining(","));
+        System.out.println(collect);
     }
 
 }
