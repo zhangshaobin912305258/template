@@ -11,7 +11,7 @@ spring:
       minimum-idle: 0
       maximum-pool-size: 500
   redis:
-    host: 139.159.227.224
+    host: 47.108.59.160
     port: 6379
     database: 0
     password:

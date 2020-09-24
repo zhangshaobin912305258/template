@@ -1,7 +1,7 @@
 package com.zhang.template.service;
 
-import com.zhang.template.entity.Menu;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zhang.template.entity.Menu;
 import com.zhang.template.entity.User;
 
 import java.util.Set;
@@ -17,4 +17,6 @@ import java.util.Set;
 public interface MenuService extends IService<Menu> {
 
     Set<String> getMenuPermission(User user);
+
+    Set<String> listByUsername(String username);
 }

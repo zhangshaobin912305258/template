@@ -2,7 +2,8 @@ package com.zhang.template.exception;
 
 import com.zhang.template.constants.ResultState;
 
-public class BusinessException extends RuntimeException{
+
+public class BusinessException extends RuntimeException {
 
     private int code;
     private String message;

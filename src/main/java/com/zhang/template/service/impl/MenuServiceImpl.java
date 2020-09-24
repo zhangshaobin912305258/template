@@ -1,13 +1,19 @@
 package com.zhang.template.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhang.template.constants.ResultState;
 import com.zhang.template.entity.Menu;
 import com.zhang.template.entity.User;
+import com.zhang.template.exception.BusinessException;
 import com.zhang.template.mapper.MenuMapper;
 import com.zhang.template.service.MenuService;
+import com.zhang.template.service.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -19,8 +25,18 @@ import java.util.Set;
  * @since 2020-09-10
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
 
+    private final UserService userService;
+
+
+    /**
+     * 获取用户具有的权限
+     * @param user
+     * @return
+     */
     @Override
     public Set<String> getMenuPermission(User user) {
         Set<String> perms = new HashSet<>();
@@ -31,5 +47,18 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             perms.addAll(baseMapper.selectMenuPermsByUserId(user.getId()));
         }
         return perms;
+    }
+
+    /**
+     * 获取用户具有的权限
+     * @param username
+     * @return
+     */
+    @Override
+    public Set<String> listByUsername(String username) {
+        User userDb = userService.getByName(username);
+        Optional.ofNullable(userDb)
+                .orElseThrow(()->new BusinessException(ResultState.INCORRECT_USER));
+        return getMenuPermission(userDb);
     }
 }
