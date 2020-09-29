@@ -1,8 +1,6 @@
 package com.zhang.template.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.zhang.template.service.impl.TokenServiceImpl;
-import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +10,7 @@ import java.time.LocalDateTime;
  * 统一处理创建时间和修改时间
  */
 @Component
-@RequiredArgsConstructor
 public class MyMetaObjectHandler implements MetaObjectHandler {
-  private final TokenServiceImpl tokenService;
-
 
   @Override
   public void insertFill(MetaObject metaObject) {

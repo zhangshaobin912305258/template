@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Result {
+public class Result<T> {
     @Builder.Default
     private int code = 200;
     private String message;
-    private Object data;
+    private T data;
 
     public static Result ok(String message, Object data) {
         return Result.builder()

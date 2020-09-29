@@ -26,7 +26,7 @@ public class MenuController {
      * @return
      */
     @PostMapping("/listByUsername/{username}")
-    public Result listByUsername(@PathVariable String username) {
+    public Result<Set<String>> listByUsername(@PathVariable String username) {
         Set<String> menus = menuService.listByUsername(username);
         return Result.ok(menus);
     }

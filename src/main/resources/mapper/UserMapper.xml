@@ -8,7 +8,7 @@
         <result column="username" property="username" />
         <result column="password" property="password" />
         <result column="nick_name" property="nickName" />
-        <result column="avator" property="avator" />
+        <result column="avatar" property="avatar" />
         <result column="salt" property="salt" />
         <result column="email" property="email" />
         <result column="mobile" property="mobile" />
@@ -17,13 +17,12 @@
         <result column="create_time" property="createTime" />
         <result column="update_by" property="updateBy" />
         <result column="update_time" property="updateTime" />
-        <result column="delete_status" property="deleteStatus" />
         <result column="remark" property="remark" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, username, password, nick_name, avator, salt, email, mobile, status, create_by, create_time, update_by, update_time, delete_status, remark
+        id, username, password, nick_name, avatar, salt, email, mobile, status, create_by, create_time, update_by, update_time, remark
     </sql>
 
 </mapper>

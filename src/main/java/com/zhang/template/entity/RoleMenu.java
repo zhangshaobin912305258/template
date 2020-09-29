@@ -1,10 +1,12 @@
 package com.zhang.template.entity;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -12,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author zhang
- * @since 2020-09-10
+ * @since 2020-09-29
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,6 +26,16 @@ public class RoleMenu extends Model<RoleMenu> {
     private Integer roleId;
 
     private Integer menuId;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人
+     */
+    private String createBy;
 
 
     @Override

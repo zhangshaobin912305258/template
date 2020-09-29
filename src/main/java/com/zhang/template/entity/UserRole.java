@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -13,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author zhang
- * @since 2020-09-10
+ * @since 2020-09-29
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -31,6 +32,16 @@ public class UserRole extends Model<UserRole> {
      * 角色id
      */
     private Integer roleId;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 创建人
+     */
+    private String createBy;
 
 
     @Override
