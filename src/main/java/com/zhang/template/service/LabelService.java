@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface LabelService extends IService<Label> {
 
+    void add(Label label);
+
+    Label getByName(String name);
 }

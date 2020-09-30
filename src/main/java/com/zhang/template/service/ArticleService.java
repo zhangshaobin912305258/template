@@ -19,4 +19,5 @@ public interface ArticleService extends IService<Article> {
 
     void update(Article article);
 
+    void delete(Integer articleId);
 }

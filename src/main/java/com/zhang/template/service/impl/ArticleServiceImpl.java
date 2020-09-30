@@ -1,5 +1,6 @@
 package com.zhang.template.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -48,6 +49,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (article == null) {
             throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
         }
+        Integer articleId = article.getId();
+        String title = article.getTitle();
+        Article articleDb = getByTitle(title);
+        if (articleDb != null && (!articleDb.getId().equals(articleId))) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR,ApiConstants.Message.TITLE_REPEAT);
+        }
+        articleDb = baseMapper.selectById(articleId);
+        BeanUtil.copyProperties(article, articleDb);
+        baseMapper.updateById(articleDb);
+    }
 
+    @Override
+    public void delete(Integer articleId) {
+        if (articleId == null || articleId <= 0) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
+        }
+        baseMapper.deleteById(articleId);
     }
 }

@@ -5,10 +5,7 @@ import com.zhang.template.entity.Article;
 import com.zhang.template.service.ArticleService;
 import com.zhang.template.vo.Result;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -33,10 +30,27 @@ public class ArticleController {
         return Result.ok();
     }
 
+    /**
+     * 更新article
+     * @param article
+     * @return
+     */
     @PostMapping("/update")
     public Result update(@RequestBody Article article) {
         articleService.update(article);
         return Result.ok();
     }
+
+    /**
+     * 删除article
+     * @param articleId
+     * @return
+     */
+    @PostMapping("/delete/{articleId}")
+    public Result delete(@PathVariable Integer articleId) {
+        articleService.delete(articleId);
+        return Result.ok();
+    }
+
 
 }
