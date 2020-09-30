@@ -53,6 +53,17 @@ public class NavigationController {
         return Result.ok();
     }
 
+    /**
+     * 删除导航
+     * @param navId
+     * @return
+     */
+    @PostMapping("/deleteNav/{navId}")
+    public Result deleteNav(@PathVariable int navId) {
+        navigationService.deleteNav(navId);
+        return Result.ok();
+    }
+
 
 
 

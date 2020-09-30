@@ -25,4 +25,8 @@ public interface NavigationService extends IService<Navigation> {
     Navigation getByTitle(String title);
 
     void updateNav(NavVo nav);
+
+    void deleteNav(int navId);
+
+    void deleteChildren(int parentId);
 }

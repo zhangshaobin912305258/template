@@ -1,5 +1,6 @@
 package com.zhang.template.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -90,7 +91,41 @@ public class NavigationServiceImpl extends ServiceImpl<NavigationMapper, Navigat
 
     @Override
     public void updateNav(NavVo nav) {
+        if (nav == null) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
+        }
+        Navigation navigation = navConverter.toEntity(nav);
+        Integer navId = navigation.getId();
+        if (navId == null) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
+        }
+        Navigation navDb = baseMapper.selectById(navId);
+        if (navDb == null) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
+        }
+        BeanUtil.copyProperties(navigation, navDb);
+        baseMapper.updateById(navDb);
+    }
 
+    @Override
+    public void deleteNav(int navId) {
+        Navigation navigation = baseMapper.selectById(navId);
+        if (navigation == null) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
+        }
+        Integer parentId = navigation.getParentId();
+        if (parentId == ApiConstants.ZERO) {
+            //可能有子导航
+            deleteChildren(parentId);
+        }
+        baseMapper.deleteById(navId);
+    }
+
+    @Override
+    public void deleteChildren(int parentId) {
+        LambdaQueryWrapper<Navigation> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Navigation::getParentId, parentId);
+        baseMapper.delete(queryWrapper);
     }
 
 

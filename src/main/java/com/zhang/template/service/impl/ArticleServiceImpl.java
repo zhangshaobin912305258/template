@@ -1,15 +1,17 @@
 package com.zhang.template.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhang.template.constants.ApiConstants;
+import com.zhang.template.constants.ResultState;
 import com.zhang.template.entity.Article;
+import com.zhang.template.exception.BusinessException;
 import com.zhang.template.mapper.ArticleMapper;
 import com.zhang.template.service.ArticleService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- *  服务实现类
- * </p>
  *
  * @author zhang
  * @since 2020-09-29
@@ -17,4 +19,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
+    @Override
+    public void add(Article article) {
+        if (article == null) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
+        }
+        String title = article.getTitle();
+        if (StrUtil.isBlank(title)) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR, ApiConstants.Message.TITLE_NOT_EMPTY);
+        }
+        Article articleDb = getByTitle(title);
+        if (articleDb != null) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR, ApiConstants.Message.TITLE_REPEAT);
+        }
+        baseMapper.insert(article);
+
+    }
+
+    @Override
+    public Article getByTitle(String title) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Article::getTitle, title);
+        return getOne(queryWrapper);
+    }
+
+    @Override
+    public void update(Article article) {
+        if (article == null) {
+            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
+        }
+
+    }
 }

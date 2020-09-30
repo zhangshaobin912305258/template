@@ -13,4 +13,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ArticleService extends IService<Article> {
 
+    void add(Article article);
+
+    Article getByTitle(String title);
+
+    void update(Article article);
+
 }
