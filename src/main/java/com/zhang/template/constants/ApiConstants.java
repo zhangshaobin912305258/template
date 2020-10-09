@@ -9,6 +9,8 @@ public class ApiConstants {
     public static class Message {
         public static final String TITLE_NOT_EMPTY = "标题不能为空";
         public static final String TITLE_REPEAT = "标题重复";
+        public static final String NAME_EMPTY = "名字不能为空";
+        public static final String LABEL_REPEAT = "标签重复";
         public static final String ARTICLE_NOT_EXIST = "文章不存在";
     }
 
