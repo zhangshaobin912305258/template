@@ -25,15 +25,15 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
     @Override
     public void add(Label label) {
         if (label == null) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
+            throw new BusinessException(ResultState.PARAM_ERROR);
         }
         String name = label.getName();
         if (StrUtil.isBlank(name)) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR, ApiConstants.Message.NAME_EMPTY);
+            throw new BusinessException(ResultState.PARAM_ERROR, ApiConstants.Message.NAME_EMPTY);
         }
         Label labelDb = getByName(name);
         if(labelDb != null) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR, ApiConstants.Message.LABEL_REPEAT);
+            throw new BusinessException(ResultState.PARAM_ERROR, ApiConstants.Message.LABEL_REPEAT);
         }
         baseMapper.insert(label);
     }
