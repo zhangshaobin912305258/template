@@ -2,16 +2,15 @@ package com.zhang.template.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhang.template.constants.ApiConstants;
 import com.zhang.template.constants.ResultState;
 import com.zhang.template.converter.nav.NavConverter;
 import com.zhang.template.entity.Navigation;
-import com.zhang.template.exception.BusinessException;
 import com.zhang.template.mapper.NavigationMapper;
 import com.zhang.template.service.NavigationService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhang.template.util.AssertUtils;
 import com.zhang.template.vo.nav.NavVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author zhang
  * @since 2020-09-29
  */
@@ -67,18 +65,12 @@ public class NavigationServiceImpl extends ServiceImpl<NavigationMapper, Navigat
 
     @Override
     public void addNav(NavVo nav) {
-        if (nav == null) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
-        }
+        AssertUtils.isNotNull(nav, ResultState.PARAM_ERROR);
         String title = nav.getTitle();
-        if (StrUtil.isBlank(title)) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR, ApiConstants.Message.TITLE_NOT_EMPTY);
-        }
+        AssertUtils.isNotEmpty(title, ResultState.PARAM_ERROR, ApiConstants.Message.TITLE_NOT_EMPTY);
         Navigation navigation = navConverter.toEntity(nav);
         Navigation navigationDb = getByTitle(title);
-        if (navigationDb != null) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR, ApiConstants.Message.TITLE_REPEAT);
-        }
+        AssertUtils.isNull(navigationDb, ResultState.PARAM_ERROR, ApiConstants.Message.TITLE_REPEAT);
         save(navigation);
     }
 
@@ -91,28 +83,21 @@ public class NavigationServiceImpl extends ServiceImpl<NavigationMapper, Navigat
 
     @Override
     public void updateNav(NavVo nav) {
-        if (nav == null) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
-        }
+        AssertUtils.isNotNull(nav, ResultState.PARAM_ERROR);
         Navigation navigation = navConverter.toEntity(nav);
         Integer navId = navigation.getId();
-        if (navId == null) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
-        }
+        AssertUtils.isNotEqualZero(navId, ResultState.PARAM_ERROR);
         Navigation navDb = baseMapper.selectById(navId);
-        if (navDb == null) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
-        }
+        AssertUtils.isNotNull(navDb, ResultState.PARAM_ERROR);
         BeanUtil.copyProperties(navigation, navDb);
         baseMapper.updateById(navDb);
     }
 
     @Override
     public void deleteNav(int navId) {
+        AssertUtils.isNotEqualZero(navId, ResultState.PARAM_ERROR);
         Navigation navigation = baseMapper.selectById(navId);
-        if (navigation == null) {
-            throw new BusinessException(ResultState.PARAM_CUSTOM_ERROR);
-        }
+        AssertUtils.isNotNull(navigation, ResultState.PARAM_ERROR);
         Integer parentId = navigation.getParentId();
         if (parentId == ApiConstants.ZERO) {
             //可能有子导航
@@ -127,6 +112,4 @@ public class NavigationServiceImpl extends ServiceImpl<NavigationMapper, Navigat
         queryWrapper.eq(Navigation::getParentId, parentId);
         baseMapper.delete(queryWrapper);
     }
-
-
 }

@@ -37,3 +37,10 @@ token:
   expireTime: 30
 
 captchaType: math
+template:
+  thread:
+    corePoolSize: 10
+    maxPoolSize: 200
+    queueCapacity: 1000
+    keepAliveSeconds: 300
+
