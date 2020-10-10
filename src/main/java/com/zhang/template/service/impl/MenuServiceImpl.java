@@ -4,16 +4,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhang.template.constants.ResultState;
 import com.zhang.template.entity.Menu;
 import com.zhang.template.entity.User;
-import com.zhang.template.exception.BusinessException;
 import com.zhang.template.mapper.MenuMapper;
 import com.zhang.template.service.MenuService;
 import com.zhang.template.service.UserService;
+import com.zhang.template.util.AssertUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -57,8 +56,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public Set<String> listByUsername(String username) {
         User userDb = userService.getByName(username);
-        Optional.ofNullable(userDb)
-                .orElseThrow(()->new BusinessException(ResultState.INCORRECT_USER));
+        AssertUtils.isNotNull(userDb, ResultState.INCORRECT_USER);
         return getMenuPermission(userDb);
     }
 }

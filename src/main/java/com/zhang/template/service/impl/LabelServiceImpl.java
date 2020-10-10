@@ -1,20 +1,16 @@
 package com.zhang.template.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zhang.template.constants.ApiConstants;
 import com.zhang.template.constants.ResultState;
 import com.zhang.template.entity.Label;
-import com.zhang.template.exception.BusinessException;
 import com.zhang.template.mapper.LabelMapper;
 import com.zhang.template.service.LabelService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zhang.template.util.AssertUtils;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- *  服务实现类
- * </p>
  *
  * @author zhang
  * @since 2020-09-29
@@ -24,17 +20,11 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements
 
     @Override
     public void add(Label label) {
-        if (label == null) {
-            throw new BusinessException(ResultState.PARAM_ERROR);
-        }
+        AssertUtils.isNotNull(label, ResultState.PARAM_ERROR);
         String name = label.getName();
-        if (StrUtil.isBlank(name)) {
-            throw new BusinessException(ResultState.PARAM_ERROR, ApiConstants.Message.NAME_EMPTY);
-        }
+        AssertUtils.isNotEmpty(name, ResultState.PARAM_ERROR, ApiConstants.Message.NAME_EMPTY);
         Label labelDb = getByName(name);
-        if(labelDb != null) {
-            throw new BusinessException(ResultState.PARAM_ERROR, ApiConstants.Message.LABEL_REPEAT);
-        }
+        AssertUtils.isNotNull(labelDb, ResultState.PARAM_ERROR, ApiConstants.Message.LABEL_REPEAT);
         baseMapper.insert(label);
     }
 
