@@ -9,6 +9,7 @@ import com.zhang.template.mapper.LabelMapper;
 import com.zhang.template.service.LabelService;
 import com.zhang.template.util.AssertUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
  * @since 2020-09-29
  */
 @Service
+@Transactional
 public class LabelServiceImpl extends ServiceImpl<LabelMapper, Label> implements LabelService {
 
     @Override

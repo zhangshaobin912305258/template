@@ -15,11 +15,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class LoginServiceImpl implements LoginService {
 
 
@@ -41,16 +43,16 @@ public class LoginServiceImpl implements LoginService {
         String code = request.getCode();
         String uuid = request.getUuid();
         String verifyKey = CaptchaConstants.CAPTCHA_CODE_KEY + uuid;
-        /*String captcha = redisCache.getCacheObject(verifyKey);
+        String captcha = redisCache.getCacheObject(verifyKey);
         redisCache.deleteObject(verifyKey);
         if (captcha == null) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(*//*username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire"))*//*));
+            //AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire"))));
             throw new BusinessException(ResultState.INVALID_CAPTCHA);
-        }*/
-        /*if (!code.equalsIgnoreCase(captcha)) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(*//*username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error"))*//*));
+        }
+        if (!code.equalsIgnoreCase(captcha)) {
+            //AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error"))));
             throw new BusinessException(ResultState.INVALID_CAPTCHA);
-        }*/
+        }
         // 用户验证
         Authentication authentication = null;
         try {

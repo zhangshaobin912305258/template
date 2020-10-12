@@ -13,6 +13,7 @@ import com.zhang.template.service.ArticleService;
 import com.zhang.template.util.AssertUtils;
 import com.zhang.template.vo.page.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author zhang
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
  */
 @SuppressWarnings("DuplicatedCode")
 @Service
+@Transactional
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     @Override

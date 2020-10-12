@@ -14,6 +14,7 @@ import com.zhang.template.util.AssertUtils;
 import com.zhang.template.vo.nav.NavVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class NavigationServiceImpl extends ServiceImpl<NavigationMapper, Navigation> implements NavigationService {
     private final NavConverter navConverter;
 

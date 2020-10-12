@@ -75,6 +75,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 服务监控
                 .antMatchers("/actuator/**")
                 .permitAll()
+                //测试接口全部放行
+                .antMatchers("/test/**")
+                .permitAll()
                 // 其他接口全部接受验证
                 .anyRequest()
                 .authenticated();
